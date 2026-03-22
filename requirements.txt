@@ -1,0 +1,14 @@
+numpy
+sounddevice
+python-dotenv
+vosk
+groq
+requests
+pyperclip
+
+# Linux (optional but faster)
+# xdotool - install via: sudo dnf install xdotool
+# xclip - install via: sudo dnf install xclip
+
+# Cross-platform fallback (macOS, Windows)
+# pyautogui - slow install on Python 3.14, skip if on Linux
