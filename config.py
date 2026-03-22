@@ -1,6 +1,7 @@
 """Configuration loader and settings."""
 
 import os
+import platform
 from pathlib import Path
 
 
@@ -12,10 +13,19 @@ def load_env():
             line = line.strip()
             if "=" in line and not line.startswith("#"):
                 key, val = line.split("=", 1)
-                os.environ.setdefault(key.strip(), val.strip())
+                key = key.strip()
+                val = val.strip()
+                # Remove quotes if present
+                if (val.startswith('"') and val.endswith('"')) or \
+                   (val.startswith("'") and val.endswith("'")):
+                    val = val[1:-1]
+                os.environ.setdefault(key, val)
 
 
 load_env()
+
+# OS detection (can be overridden via env)
+SYSTEM = os.environ.get("SYSTEM", platform.system())
 
 # Audio settings
 SAMPLE_RATE = int(os.environ.get("SAMPLE_RATE", 16000))

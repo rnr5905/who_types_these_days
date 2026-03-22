@@ -1,0 +1,8 @@
+# macOS requirements
+numpy
+sounddevice
+python-dotenv
+vosk
+groq
+requests
+pyperclip

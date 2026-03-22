@@ -3,5 +3,6 @@
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
-# Try signal first (Linux/macOS), fall back to file trigger
-python "$SCRIPT_DIR/main.py" --trigger
+# Activate venv and run
+source "$SCRIPT_DIR/venv/bin/activate"
+python3 "$SCRIPT_DIR/main.py" --trigger

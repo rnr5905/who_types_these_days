@@ -1,20 +1,15 @@
-"""Platform detection and OS-specific utilities."""
+"""Platform utilities - uses SYSTEM from config."""
 
 import os
 import signal
-import platform
 import tempfile
 from pathlib import Path
 
+from config import SYSTEM
 
-SYSTEM = platform.system()  # "Linux", "Darwin" (macOS), "Windows"
 TEMP_DIR = Path(tempfile.gettempdir())
 TRIGGER_FILE = TEMP_DIR / "voice_dictation_trigger"
 PID_FILE = TEMP_DIR / "voice_dictation.pid"
-
-
-def get_system() -> str:
-    return SYSTEM
 
 
 def is_linux() -> bool:
@@ -30,12 +25,10 @@ def is_windows() -> bool:
 
 
 def supports_signal_trigger() -> bool:
-    """Check if OS supports SIGUSR1 for instant triggering."""
     return SYSTEM in ("Linux", "Darwin")
 
 
 def send_trigger_signal():
-    """Send SIGUSR1 to running process (Linux/macOS only)."""
     if not supports_signal_trigger():
         return False
 
@@ -50,14 +43,11 @@ def send_trigger_signal():
 
 
 def create_trigger_file():
-    """Create trigger file (works on all OS)."""
     TRIGGER_FILE.touch()
 
 
 def trigger():
-    """Trigger recording using best method for OS."""
     if supports_signal_trigger():
-        # Try signal first (instant), fall back to file
         if not send_trigger_signal():
             create_trigger_file()
     else:

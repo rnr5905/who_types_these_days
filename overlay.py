@@ -2,7 +2,7 @@
 
 import tkinter as tk
 
-from utils import SYSTEM
+from config import SYSTEM
 
 
 class Overlay:

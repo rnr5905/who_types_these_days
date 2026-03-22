@@ -35,20 +35,23 @@ def stop_and_process():
     """Stop recording, transcribe, and output text."""
     global processing, cooldown_until
 
-    text = recorder.stop()
-    duration = recorder.last_duration
+    try:
+        text = recorder.stop()
+        duration = recorder.last_duration
 
-    if duration > LONG_RECORDING_THRESHOLD:
-        cooldown_until = time.time() + COOLDOWN_SECONDS
-        print(f"[DEBUG] Cooldown: {COOLDOWN_SECONDS}s")
+        if duration > LONG_RECORDING_THRESHOLD:
+            cooldown_until = time.time() + COOLDOWN_SECONDS
+            print(f"[DEBUG] Cooldown: {COOLDOWN_SECONDS}s")
 
-    if text:
-        print(f"Result: {text}")
-        type_text(text)
-    else:
-        print("No speech detected")
-
-    processing = False
+        if text:
+            print(f"Result: {text}")
+            type_text(text)
+        else:
+            print("No speech detected")
+    finally:
+        # Always reset processing flag
+        processing = False
+        print("[DEBUG] Ready for next recording")
 
 
 def toggle():
