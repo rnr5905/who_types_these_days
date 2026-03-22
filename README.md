@@ -11,10 +11,12 @@ Real-time speech-to-text with multiple backends. Cross-platform (Linux, macOS, W
 python3 -m venv venv
 source venv/bin/activate
 
-# 2. Install dependencies
-pip install -r requirements.txt
+# 2. Install dependencies (choose your OS)
+pip install -r requirements-linux.txt    # Linux
+# pip install -r requirements-macos.txt  # macOS
+# pip install -r requirements-windows.txt # Windows
 
-# Linux: Install system packages (optional but faster)
+# Linux: Install system packages
 sudo dnf install xdotool xclip  # Fedora
 # sudo apt install xdotool xclip  # Ubuntu/Debian
 
@@ -25,6 +27,17 @@ cp .env.example .env
 # 4. Run
 python3 main.py
 ```
+
+## Desktop Shortcut (Linux)
+
+Copy the desktop file to your Desktop:
+
+```bash
+cp linux_start.desktop ~/Desktop/speech-dictation.desktop
+chmod +x ~/Desktop/speech-dictation.desktop
+```
+
+Double-click to launch. Right-click → Allow Launching if needed.
 
 ## Usage
 
@@ -41,12 +54,13 @@ python3 main.py --trigger
 ```
 
 **Set up hotkey:**
-- **Linux (GNOME):** Settings → Keyboard → Custom Shortcuts → Add
+- **Linux (XFCE):** Settings → Keyboard → Application Shortcuts → Add
   - Command: `/path/to/tts-realtime/trigger.sh`
   - Shortcut: Press your key combo (e.g., `Ctrl+Space`)
 
+- **Linux (GNOME):** Settings → Keyboard → Custom Shortcuts → Add
+
 - **macOS:** System Preferences → Keyboard → Shortcuts → Services
-  - Or use Automator to create a Service
 
 - **Windows:** Use AutoHotKey or PowerToys Keyboard Manager
 
@@ -79,6 +93,9 @@ python3 main.py --trigger
 Edit `.env`:
 
 ```bash
+# OS: Linux, Darwin (macOS), Windows
+SYSTEM=Linux
+
 # STT Backend: vosk, groq, deepgram
 STT_BACKEND=deepgram
 
@@ -105,8 +122,8 @@ LONG_RECORDING_THRESHOLD=60   # What counts as "long"
 
 | Feature | Linux | macOS | Windows |
 |---------|-------|-------|---------|
-| Typing | xdotool (fast) | pyautogui | pyautogui |
-| Clipboard | xclip | pyperclip | pyperclip |
+| Typing | xdotool | osascript | pyautogui |
+| Clipboard | xclip | pbcopy | pyperclip |
 | Trigger | SIGUSR1 (instant) | File-based | File-based |
 
 Linux uses native tools for best performance. Other OS use Python libraries.
@@ -115,24 +132,27 @@ Linux uses native tools for best performance. Other OS use Python libraries.
 
 ```
 tts-realtime/
-├── main.py              # Entry point
-├── config.py            # Settings loader
-├── recorder.py          # Audio recording
-├── overlay.py           # GUI overlay
-├── trigger.sh           # Trigger script
-├── requirements.txt     # Dependencies
-├── .env                 # Your config
-├── .env.example         # Config template
-├── stt/                 # Speech-to-text backends
+├── main.py                   # Entry point
+├── config.py                 # Settings loader
+├── recorder.py               # Audio recording
+├── overlay.py                # GUI overlay
+├── trigger.sh                # Trigger script
+├── linux_start.desktop       # Desktop shortcut (Linux)
+├── requirements-linux.txt    # Dependencies (Linux)
+├── requirements-macos.txt    # Dependencies (macOS)
+├── requirements-windows.txt  # Dependencies (Windows)
+├── .env                      # Your config
+├── .env.example              # Config template
+├── stt/                      # Speech-to-text backends
 │   ├── __init__.py
 │   ├── base.py
 │   ├── vosk.py
 │   ├── groq.py
 │   └── deepgram.py
-└── utils/               # Utilities
+└── utils/                    # Utilities
     ├── __init__.py
-    ├── platform.py      # OS detection
-    └── typing.py        # Cross-platform typing
+    ├── platform.py           # OS utilities
+    └── typing.py             # Cross-platform typing
 ```
 
 ## Troubleshooting
@@ -156,7 +176,7 @@ tts-realtime/
 
 **Import errors:**
 - Activate venv: `source venv/bin/activate`
-- Reinstall: `pip install -r requirements.txt`
+- Reinstall: `pip install -r requirements-linux.txt`
 
 ## CLI Commands
 
